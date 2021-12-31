@@ -23,7 +23,7 @@
         "command": "vscode-codegrapher.helloWorld",
         "title": "Hello World"
       }
-		],
+    ],
     "views": {
       "explorer": [
         {
@@ -66,6 +66,6 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "codegrapher": "^1.0.0"
+    "codegrapher": "^1.0.3"
   }
 }

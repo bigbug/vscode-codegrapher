@@ -3,6 +3,9 @@
 import * as vscode from 'vscode';
 
 import codegrapher from 'codegrapher';
+import { CodeGraphProvider, Dependency } from './provider';
+
+const panels : Map<vscode.Uri, any> = new Map();
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -19,9 +22,39 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from vscode-codegrapher!');
-	});
 
+		if(!vscode.window.activeTextEditor) {return;}
+
+		const renderedContent = codegrapher(vscode.window.activeTextEditor.document.getText(), false);
+
+		const uri = vscode.window.activeTextEditor.document.uri;
+		console.log(uri.path);
+
+		let args = {
+			document: vscode.window.activeTextEditor.document,
+			content: renderedContent,
+			callback: (panel:any) => {
+				panels.set(uri, panel);
+			},
+			allowMultiplePanels: true,
+			title: "CodeGrapherPreview"
+		};
+					
+		vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", args);
+
+	});
 	context.subscriptions.push(disposable);
+
+	const nodeDependenciesProvider = new CodeGraphProvider("");
+	vscode.window.registerTreeDataProvider('vscodeCodeGrapher', nodeDependenciesProvider);
+
+	vscode.workspace.onDidChangeTextDocument(event => {
+		let panel = panels.get(event.document.uri);
+		if(panel){
+			const renderedContent = codegrapher(event.document.getText(), false);
+			panel.requestRender(renderedContent);
+		}
+    }, null, context.subscriptions);
 }
 
 // this method is called when your extension is deactivated
