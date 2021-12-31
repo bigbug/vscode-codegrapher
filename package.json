@@ -13,7 +13,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vscode-codegrapher.helloWorld"
+    "onCommand:vscode-codegrapher.helloWorld",
+    "onLanguage:c"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -22,18 +23,18 @@
         "command": "vscode-codegrapher.helloWorld",
         "title": "Hello World"
       }
-    ],
+		],
     "views": {
       "explorer": [
         {
-          "id": "vscode-codegrapher.outline",
+          "id": "vscodeCodeGrapher",
           "name": "CodeGrapher"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "vscode-codegrapher.outline",
+        "view": "vscodeCodeGrapher",
         "contents": "No GraphProvider available for the current file."
       }
     ]
