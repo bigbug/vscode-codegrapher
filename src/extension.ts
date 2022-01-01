@@ -18,12 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscode-codegrapher.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from vscode-codegrapher!');
-
-		if(!vscode.window.activeTextEditor) {return;}
+	let disposable = vscode.commands.registerCommand('vscodeCodeGrapher.activeWindow', () => {
+		if(!vscode.window.activeTextEditor) {
+			return;
+		}
 
 		const renderedContent = codegrapher(vscode.window.activeTextEditor.document.getText(), false);
 
@@ -47,14 +45,25 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const nodeDependenciesProvider = new CodeGraphProvider("");
 	vscode.window.registerTreeDataProvider('vscodeCodeGrapher', nodeDependenciesProvider);
+	vscode.commands.registerCommand("vscodeCodeGrapher.refresh", () =>
+		nodeDependenciesProvider.refresh()
+    );
 
 	vscode.workspace.onDidChangeTextDocument(event => {
+		vscode.commands.executeCommand("vscodeCodeGrapher.refresh");
 		let panel = panels.get(event.document.uri);
 		if(panel){
 			const renderedContent = codegrapher(event.document.getText(), false);
 			panel.requestRender(renderedContent);
 		}
     }, null, context.subscriptions);
+
+	vscode.workspace.onDidCloseTextDocument(event => {
+		vscode.commands.executeCommand("vscodeCodeGrapher.refresh");
+	});
+	vscode.workspace.onDidOpenTextDocument(event => {
+		vscode.commands.executeCommand("vscodeCodeGrapher.refresh");
+	});
 }
 
 // this method is called when your extension is deactivated

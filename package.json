@@ -7,21 +7,25 @@
     "vscode": "^1.63.0"
   },
   "extensionDependencies": [
-    "tintinweb.graphviz-interactive-preview"
+    "tintinweb.graphviz-interactive-preview",
+    "ms-vscode.cpptools"
   ],
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vscode-codegrapher.helloWorld",
     "onLanguage:c"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-codegrapher.helloWorld",
-        "title": "Hello World"
+        "command": "vscodeCodeGrapher.activeWindow",
+        "title": "Code Graph the active Editor"
+      },
+      {
+        "command": "vscodeCodeGrapher.refresh",
+        "title": "Refresh CodeGrapher Outline view"
       }
     ],
     "views": {
