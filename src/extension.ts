@@ -42,6 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 				content: renderedContent,
 				callback: (panel:any) => {
 					panels.set(uri, panel);
+					panel.getPanel().onDidDispose(() => panels.delete(uri));
 				},
 				allowMultiplePanels: true,
 				title: "CodeGrapherPreview"
