@@ -1,12 +1,5 @@
 import * as vscode from 'vscode';
 
-function findVars(symbols: vscode.DocumentSymbol[]): vscode.DocumentSymbol[] {
-	var vars =
-		symbols.filter(symbol => symbol.kind === vscode.SymbolKind.Variable);
-	return vars.concat(symbols.map(symbol => findVars(symbol.children))
-						   .reduce((a, b) => a.concat(b), []));
-  }
-
 export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
 
 	private _onDidChangeTreeData: vscode.EventEmitter<Dependency | undefined | void> = new vscode.EventEmitter<Dependency | undefined | void>();
