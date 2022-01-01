@@ -23,7 +23,7 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
 		return element;
 	}
 
-    private getSymbols(document: vscode.TextDocument): Thenable<string[]> {
+    private getSymbols(document: vscode.TextDocument): Thenable<vscode.DocumentSymbol[]> {
 		var activeEditor = vscode.window.activeTextEditor;
 		if (activeEditor !== undefined) {
 		return vscode.commands
@@ -33,7 +33,7 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
 				const res = [];
 				if (symbols !== undefined) {
 					for (const variable of symbols) {
-						res.push(variable.name);
+						res.push(variable);
 					}
 				}
 				return res;
@@ -67,7 +67,11 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
 
         if(symbols) {
             symbols.forEach(i=>{
-                res.push(new Dependency(i, vscode.TreeItemCollapsibleState.None));
+                res.push(new Dependency(i.name, vscode.TreeItemCollapsibleState.None, {
+					title: "Open",
+					command: "vscodeCodeGrapher.activeWindow",
+					arguments: [i]
+				}));
             });
         }
 

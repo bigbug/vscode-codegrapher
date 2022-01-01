@@ -18,28 +18,36 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscodeCodeGrapher.activeWindow', () => {
+	let disposable = vscode.commands.registerCommand('vscodeCodeGrapher.activeWindow', (symbol: vscode.DocumentSymbol) => {
 		if(!vscode.window.activeTextEditor) {
 			return;
 		}
 
-		const renderedContent = codegrapher(vscode.window.activeTextEditor.document.getText(), false);
+		let renderedContent;
+		if(symbol) {
+			const code = vscode.window.activeTextEditor.document.getText(symbol.range);
+			renderedContent = codegrapher(code, false);
+		} else {
+			renderedContent = codegrapher(vscode.window.activeTextEditor.document.getText(), false);
+		}
 
 		const uri = vscode.window.activeTextEditor.document.uri;
-		console.log(uri.path);
 
-		let args = {
-			document: vscode.window.activeTextEditor.document,
-			content: renderedContent,
-			callback: (panel:any) => {
-				panels.set(uri, panel);
-			},
-			allowMultiplePanels: true,
-			title: "CodeGrapherPreview"
-		};
-					
-		vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", args);
-
+		const panel = panels.get(uri);
+		if(panel){;
+			panel.requestRender(renderedContent);
+		} else {
+			const args = {
+				document: vscode.window.activeTextEditor.document,
+				content: renderedContent,
+				callback: (panel:any) => {
+					panels.set(uri, panel);
+				},
+				allowMultiplePanels: true,
+				title: "CodeGrapherPreview"
+			};
+			vscode.commands.executeCommand("graphviz-interactive-preview.preview.beside", args);
+		}
 	});
 	context.subscriptions.push(disposable);
 
@@ -51,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	vscode.workspace.onDidChangeTextDocument(event => {
 		vscode.commands.executeCommand("vscodeCodeGrapher.refresh");
-		let panel = panels.get(event.document.uri);
+		const panel = panels.get(event.document.uri);
 		if(panel){
 			const renderedContent = codegrapher(event.document.getText(), false);
 			panel.requestRender(renderedContent);
