@@ -24,7 +24,6 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
 	}
 
     private getSymbols(document: vscode.TextDocument): Thenable<string[]> {
-		console.log("getSymbols!");
 		var activeEditor = vscode.window.activeTextEditor;
 		if (activeEditor !== undefined) {
 		return vscode.commands
