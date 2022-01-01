@@ -1,6 +1,4 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
 
 function findVars(symbols: vscode.DocumentSymbol[]): vscode.DocumentSymbol[] {
 	var vars =
@@ -33,15 +31,12 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
 			.executeCommand<vscode.DocumentSymbol[]>(
 				'vscode.executeDocumentSymbolProvider', activeEditor.document.uri)
 			.then(symbols => {
-				console.log(symbols);
 				const res = [];
 				if (symbols !== undefined) {
 					for (const variable of symbols) {
-						console.log(variable.name);
 						res.push(variable.name);
 					}
 				}
-				console.log(res);
 				return res;
 			});
 		}
@@ -49,7 +44,6 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
       }
 
 	async getChildren(element?: Dependency): Promise<Dependency[]> {
-		console.log("update Children");
         /*vscode.window.showInformationMessage("Get Children!");
 		if (!this.workspaceRoot) {
 			vscode.window.showInformationMessage('No dependency in empty workspace');
@@ -71,7 +65,6 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
             })
         ];
         const symbols = await this.getSymbols(vscode.window.activeTextEditor.document);
-		console.log(symbols);
 
         if(symbols) {
             symbols.forEach(i=>{
