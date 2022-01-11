@@ -26,7 +26,9 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
 				const res = [];
 				if (symbols !== undefined) {
 					for (const variable of symbols) {
-						res.push(variable);
+						if([vscode.SymbolKind.Function, vscode.SymbolKind.Method].includes(variable.kind)) {
+							res.push(variable);
+						}
 					}
 				}
 				return res;

@@ -2,7 +2,7 @@
   "name": "vscode-codegrapher",
   "displayName": "vscode-codegrapher",
   "description": "Graph Code",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.63.0"
   },
@@ -76,6 +76,6 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "codegrapher": "^1.0.6"
+    "codegrapher": "^1.0.7"
   }
 }
