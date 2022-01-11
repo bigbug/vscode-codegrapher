@@ -18,15 +18,18 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscodeCodeGrapher.activeWindow', (symbol: vscode.DocumentSymbol) => {
+	let disposable = vscode.commands.registerCommand('vscodeCodeGrapher.activeWindow', (type: string = "whole", symbol: vscode.DocumentSymbol) => {
 		if(!vscode.window.activeTextEditor) {
 			return;
 		}
 
 		let renderedContent;
-		if(symbol) {
+		if(type === "symbol") {
 			const code = vscode.window.activeTextEditor.document.getText(symbol.range);
 			renderedContent = codegrapher(code, false);
+		} else if(type === "selection") {
+			const code = vscode.window.activeTextEditor.document.getText(vscode.window.activeTextEditor.selection);
+			renderedContent = codegrapher(code);
 		} else {
 			renderedContent = codegrapher(vscode.window.activeTextEditor.document.getText(), false);
 		}

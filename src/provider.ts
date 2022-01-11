@@ -56,6 +56,12 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
             new Dependency("Whole File", vscode.TreeItemCollapsibleState.None, {
                 command: "vscodeCodeGrapher.activeWindow",
                 title: "Open",
+				arguments: ["whole"]
+            }),
+			new Dependency("Selection", vscode.TreeItemCollapsibleState.None, {
+                command: "vscodeCodeGrapher.activeWindow",
+                title: "Open",
+				arguments: ["selection"]
             })
         ];
         const symbols = await this.getSymbols(vscode.window.activeTextEditor.document);
@@ -65,7 +71,7 @@ export class CodeGraphProvider implements vscode.TreeDataProvider<Dependency> {
                 res.push(new Dependency(i.name, vscode.TreeItemCollapsibleState.None, {
 					title: "Open",
 					command: "vscodeCodeGrapher.activeWindow",
-					arguments: [i]
+					arguments: ["symbol" ,i]
 				}));
             });
         }
